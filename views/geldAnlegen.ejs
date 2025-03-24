@@ -37,9 +37,9 @@
             <input type="number" name="Laufzeit" value=<%= Laufzeit %>></br>
             <!--Die formaction legt fest, dass auf dem Server die app.post('/geldAnlegen') abgearbeitet wird,
             sobald der Kunde den Button drückt.-->
-            <button type="submit" formaction="/geldAnlegen">Zinsen berechnen</button><br>
             <label>Geld aufs Konto einzahlen?</label><br>
-            <input type="checkbox" name="Einzahlen">
+            <input type="checkbox" name="Einzahlen"><br>
+            <button type="submit" formaction="/geldAnlegen">Zinsen berechnen</button><br>
         </form>
         <p>Unser Zinssatz liegt momentan bei: <%= Zinssatz %>%</p>                
         <p><%= Meldung %></p>
