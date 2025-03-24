@@ -22,6 +22,31 @@
     </header>
     <main>
         <H1>Kontenübersicht</H1>
+
+        <h2>Ihre Konton</h2>
+
+
+        <p><%= Inhaber %></p>
+        <p><%= Iban %></p>
+        <p><%= Saldo %></p>
+        <br>
+        <br>
+
+        <h2>Heir ein Neues Konto erstellen</h2>
+
+        <form method="post">
+            <!--Das Label zeigt dem Kunden Text im Formular an.-->
+            <label>Kontoinhaber</label></br>
+            <!--Das Eingabefeld hat den type number, womit die Eingabe von Zahlen erzwungen wird.-->
+            <!--Der Name lautet Betrag. Der Server greift über den Namen auf das Input zu.-->
+            <input type="text" name="Inhaber"><br>
+            <label>IBAN</label></br>
+            <input type="text" name="IBAN" ></br>
+            <!--Die formaction legt fest, dass auf dem Server die app.post('/geldAnlegen') abgearbeitet wird,
+            sobald der Kunde den Button drückt.-->
+            <button type="submit" formaction="/kontenuebersicht">Konto erstellen</button>
+        </form>
+        <p><%= Meldung %></p>
     </main>
 
     <footer>

@@ -8,6 +8,7 @@ class Kunde{
 		// IstEingeloggt ist ein boolean.
 		// Der Wert ist entweder wahr oder falsch.
 		this.IstEingeloggt
+		this.Mail
 	}
 }
 
@@ -19,7 +20,8 @@ kunde.Nachname = "Kiff"
 kunde.Vorname = "Pit"
 kunde.Benutzername = "pk"
 kunde.Kennwort = "123"
-kunde.IstEingeloggt = false
+kunde.IstEingeloggt = true
+kunde.Mail = "gb123@gmail.com"
 
 // Klassenefinition des Kundenberaters
 class Kundenberater{
@@ -42,6 +44,16 @@ kundenberater.Telefonnummer = "012345 67890"
 kundenberater.Mail = "h.pass@borken-bank.de"
 
 kundenberater.Bild = "pass.jpg"
+
+class Konto{
+	constructor(){
+		this.Iban
+		this.Saldo
+		this.Inhaber
+	}
+}
+
+let konto = new Konto();
 
 'use strict';
 
@@ -82,6 +94,8 @@ const cookieParser = require('cookie-parser')
 // Die Anforderungen an gültige Mails sind exakt festgelegt im RFC 5322. 
 
 const validator = require("email-validator");
+const IBANValidator = require('iban-validator-js');
+
 
 // Die Funktion validate wird auf das validator-Objekt aufgerufen.
 // Als Parameter wird eine Mail-Adresse an die Funktion übergeben.
@@ -161,14 +175,16 @@ app.get('/agb', (req, res) => {
 	if(kunde.IstEingeloggt){
 
 		// Wenn die Zugangsdaten korrekt sind, dann wird die angesurfte Seite gerendert.
-		res.render('login.ejs',{});
+		res.render('agb.ejs',{
+			Meldung: ""
+		});
 
 	}else{
 		
 		// Wenn die Zugangsdaten nicht korrekt sind, dann wird die login-Seite gerendert.
-		res.render('agb.ejs',{
+		res.render('login.ejs',{
 			Meldung: "Melden Sie sich zuerst an."
-		});
+		}); 
 	}
 });
 
@@ -193,7 +209,12 @@ app.get('/kontenuebersicht', (req, res) => {
 	if(kunde.IstEingeloggt){
 
 		// Wenn die Zugangsdaten korrekt sind, dann wird die angesurfte Seite gerendert.
-		res.render('kontenuebersicht.ejs',{});
+		res.render('kontenuebersicht.ejs',{
+			Meldung: "",
+			Inhaber: konto.Inhaber,
+			Saldo: konto.Saldo,
+			Iban: konto.Iban,
+		});
 
 	}else{
 		
@@ -202,6 +223,34 @@ app.get('/kontenuebersicht', (req, res) => {
 			Meldung: "Melden Sie sich zuerst an."
 		});
 	}
+});
+
+app.post('/kontenuebersicht', (req, res) => {
+	
+	konto.Iban = req.body.IBAN
+	konto.Inhaber = req.body.Inhaber
+	konto.Saldo = 10
+		
+	if(IBANValidator.isValid(konto.Iban)){
+		res.render('kontenuebersicht.ejs',{
+			Meldung: "Sie haben erfolgreich ien konto angelegt",
+			Inhaber: konto.Inhaber,
+			Saldo: konto.Saldo,
+			Iban: konto.Iban,
+		})
+		} else {
+			res.render('kontenuebersicht.ejs',{
+				Meldung: "Bitte noch einaml mit einer Gültigen Iban",
+				Inhaber: "",
+				Saldo: "",
+				Iban: "",
+			});
+		}
+	
+
+		
+
+	
 });
 
 app.get('/profil', (req, res) => {
@@ -239,18 +288,18 @@ app.post('/profil', (req, res) => {
 		if(validator.validate(email)){
 
 			console.log("Gültige EMail.")
-			meldung = "EMail-adresse gültig";
+			meldung = "EMail-adresse gültig. Deine Neue Email ist:" + email;
 			kunde.Mail = email;
 
 		}else{
 			console.log("Ungültige EMail.")
-			meldung = "EMail-adresse ungültig";
+			meldung = "EMail-adresse ungültig. Bitte schau ob du Deine Email-Adresse richtig eingegeben hast";
 		}
 		
 		// Die profil-Seite wird gerendert.
 		res.render('profil.ejs',{
 			Meldung: meldung,
-			Email: ""
+			Email: email
 		});
 
 	}else{
@@ -263,7 +312,22 @@ app.post('/profil', (req, res) => {
 });
 
 app.get('/postfach', (req, res) => {
-	res.render('postfach.ejs',{});
+	
+	if(kunde.IstEingeloggt){
+
+		// Wenn die Zugangsdaten korrekt sind, dann wird die angesurfte Seite gerendert.
+		res.render('postfach.ejs',{
+			Meldung: "",
+		});
+
+	}else{
+		
+		// Wenn die Zugangsdaten nicht korrekt sind, dann wird die login-Seite gerendert.
+		res.render('login.ejs',{
+			Meldung: "Melden Sie sich zuerst an."
+		});
+	}
+
 });
 
 // Sobald die Seite "Kredit beantragen" aufgerufen wird, wird die app.get abgearbeitet.
@@ -345,7 +409,11 @@ app.get('/geldAnlegen', (req, res) => {
 	
 			Betrag:120,
 			Laufzeit:2,
-			Meldung: ""
+			Meldung: "",
+			Zinssatz: 10
+
+
+
 		})
 
 	}else{
@@ -373,7 +441,13 @@ app.post('/geldAnlegen', (req, res) => {
 
 	let zinssatz = 0.1
 
-	let zinsen = betrag * zinssatz;
+	let zinsen = betrag * Math.pow(1 + zinssatz, laufzeit);
+
+	let einzahlen = req.body.Einzahlen 
+	let saldo = konto.Saldo
+	if(einzahlen){
+		konto.Saldo = betrag + saldo
+	}
 
 
 	if(kunde.IstEingeloggt){
@@ -382,7 +456,8 @@ app.post('/geldAnlegen', (req, res) => {
 		res.render('geldAnlegen.ejs',{
 			Betrag: betrag,
 			Laufzeit: laufzeit,
-			Meldung: "Ihre Zinsen betragen: " + zinsen
+			Meldung: "Ihre Zinsen betragen: " + zinsen,
+			Zinssatz: 10
 		});
 
 	}else{

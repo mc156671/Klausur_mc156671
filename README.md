@@ -11,6 +11,12 @@ Am Ende müssen Sie Ihr Projekt commiten und pushen. Senden Sie mir den Link in 
 
 Beantworten Sie die folgenden Frage hier direkt im Text: Welche Aufgabe haben cookies in unserer Banking-App?
 
+Sie speicher informationen über den kunden im browser damit diese nicht auf den server gespeichert werden müssen daruch spart isch der betreiber eine menge speicherplatz 
+
+Warum sind Passkeys besser als die kombination aus benutzername und kennwort?
+
+Ein Kennwort ist anfälich für phishing und bruteforce angriffe. dies ist bei passkeys nicht möglich da der Private key nie das gerät verlässt. Bei den Passkey verfahren wird eine asymmetrische verschlüsselung angewendet die ist mit der heutigen technic nicht zu knacken. Außerdem muss der benutzer sich kein kennwort merken er braucht lediglich nur sein gerät und den Pin oder eine biometrische värifikation.
+
 ## Aufgabe 3
 
 Auf der Seite Hilfe sind vier Fehler eingebaut. Finden und korrigieren Sie die Fehler. Schreiben Sie zu jedem Fehler eine Kommentarzeile, in der Sie schreiben, was Sie korrigiert haben.
