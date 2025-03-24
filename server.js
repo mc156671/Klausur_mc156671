@@ -20,7 +20,7 @@ kunde.Nachname = "Kiff"
 kunde.Vorname = "Pit"
 kunde.Benutzername = "pk"
 kunde.Kennwort = "123"
-kunde.IstEingeloggt = true
+kunde.IstEingeloggt = false
 kunde.Mail = "gb123@gmail.com"
 
 // Klassenefinition des Kundenberaters
